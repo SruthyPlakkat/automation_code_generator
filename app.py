@@ -137,8 +137,8 @@ body {
 }
 .chatbot-wrap > .wrap,
 .chatbot-wrap .bubble-wrap {
-    min-height: clamp(320px, 48vh, 900px) !important;
-    max-height: min(calc(100vh - 340px), 960px) !important;
+    min-height: 400px !important;
+    max-height: 700px !important;
 }
 .chatbot-wrap pre, .chatbot-wrap .prose pre {
     background: #080810 !important;
@@ -449,7 +449,7 @@ with gr.Blocks(title="Automation Code Generator") as demo:
     chatbot = gr.Chatbot(
         label="Generated Script & Analysis",
         value=list(WELCOME),
-        height="60vh",
+        height=600,
         elem_classes=["chatbot-wrap"],
     )
     download_btn = gr.DownloadButton(

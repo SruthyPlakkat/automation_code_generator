@@ -392,7 +392,11 @@ EXAMPLE_SCENARIOS = [
     ],
 ]
 
-with gr.Blocks(title="Automation Code Generator") as demo:
+with gr.Blocks(
+    title="Automation Code Generator",
+    theme=gr.themes.Soft(primary_hue="violet", secondary_hue="pink"),
+    css=CSS,
+) as demo:
     agent_history_state = gr.State([])
 
     gr.HTML(HEADER_HTML)
@@ -484,6 +488,4 @@ if __name__ == "__main__":
     demo.launch(
         server_name="0.0.0.0",
         server_port=7860,
-        theme=gr.themes.Soft(primary_hue="violet", secondary_hue="pink"),
-        css=CSS,
     )

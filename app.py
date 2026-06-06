@@ -452,10 +452,10 @@ with gr.Blocks(title="Automation Code Generator") as demo:
         height=600,
         elem_classes=["chatbot-wrap"],
     )
-    download_btn = gr.DownloadButton(
+    download_btn = gr.File(
         label="⬇ Download test script (.py)",
         visible=False,
-        variant="secondary",
+        interactive=False,
     )
 
     # ── Events ───────────────────────────────────────────────────────────────
@@ -489,5 +489,4 @@ if __name__ == "__main__":
         theme=gr.themes.Base(primary_hue="violet", secondary_hue="purple", neutral_hue="slate"),
         css=CSS,
         js="() => { document.documentElement.classList.add('dark'); }",
-        allowed_paths=[tempfile.gettempdir()],
     )

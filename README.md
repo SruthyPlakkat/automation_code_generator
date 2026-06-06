@@ -4,7 +4,7 @@ emoji: 🤖
 colorFrom: blue
 colorTo: indigo
 sdk: gradio
-sdk_version: 5.29.0
+sdk_version: 6.0.0
 app_file: app.py
 pinned: false
 license: mit
@@ -24,7 +24,7 @@ An AI agent that accepts a URL and a plain-English test scenario, then automatic
 
 ```
 app.py          ← Gradio web UI
-agent.py        ← Claude tool-use agentic loop (orchestrator)
+agent.py        ← GPT-4o tool-use agentic loop (orchestrator)
 tools.py        ← Playwright-based tools (navigate_and_capture, extract_page_elements)
 ```
 
@@ -34,14 +34,14 @@ tools.py        ← Playwright-based tools (navigate_and_capture, extract_page_e
 User (URL + scenario)
        │
        ▼
-  Claude (claude-sonnet-4-6)
+  GPT-4o (gpt-4o)
        │  calls tool ──► navigate_and_capture(url)
        │                  → title, URL, HTML snippet
        │  calls tool ──► extract_page_elements(url)
        │                  → list of elements + selectors
        │
        ▼
-  Claude generates Playwright pytest script
+  GPT-4o generates Playwright pytest script
        │
        ▼
   Gradio UI displays analysis + code
@@ -53,7 +53,7 @@ User (URL + scenario)
 
 | Key | Where to get it | Required? |
 |-----|----------------|-----------|
-| `ANTHROPIC_API_KEY` | [console.anthropic.com](https://console.anthropic.com/settings/keys) | ✅ Yes |
+| `OPENAI_API_KEY` | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) | ✅ Yes |
 
 No other API keys are needed — Playwright runs locally via headless Chromium.
 
@@ -74,9 +74,9 @@ uv sync
 # 3. Install Playwright's Chromium browser (one-time)
 uv run playwright install chromium
 
-# 4. Add your Anthropic API key
+# 4. Add your OpenAI API key
 cp .env.example .env
-# Edit .env and set ANTHROPIC_API_KEY=sk-ant-...
+# Edit .env and set OPENAI_API_KEY=sk-...
 
 # 5. Launch the app
 uv run python app.py

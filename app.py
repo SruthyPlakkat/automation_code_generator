@@ -25,12 +25,14 @@ subprocess.run(
 # ── CSS ───────────────────────────────────────────────────────────────────────
 
 CSS = """
-/* ── Base ─────────────────────────────────────────────────────────────────── */
+/* ── Base (dark) ───────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
+
+html { color-scheme: dark; }
 
 body {
     font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-    background: linear-gradient(135deg, #fdf4ff 0%, #fce7f3 30%, #eff6ff 65%, #f5f3ff 100%);
+    background: linear-gradient(135deg, #0d0d1a 0%, #130d1f 45%, #0d1520 100%);
     min-height: 100vh;
     margin: 0;
 }
@@ -42,16 +44,16 @@ body {
     padding: clamp(8px, 2vw, 24px) clamp(10px, 3vw, 32px) !important;
 }
 
-/* ── Soft animated header ──────────────────────────────────────────────────── */
+/* ── Animated header ───────────────────────────────────────────────────────── */
 .app-header {
-    background: linear-gradient(-45deg, #fce7f3, #ede9fe, #dbeafe, #fae8ff, #fce7f3);
+    background: linear-gradient(-45deg, #1e0544, #2d1060, #3b1375, #4c1d95, #2d1060);
     background-size: 400% 400%;
     animation: gradient-wave 10s ease infinite;
     border-radius: clamp(10px, 1.5vw, 18px);
     padding: clamp(16px, 3vw, 32px) clamp(20px, 4vw, 40px) clamp(14px, 2.5vw, 26px);
     margin-bottom: clamp(12px, 2vw, 22px);
-    box-shadow: 0 6px 30px rgba(139, 92, 246, 0.12);
-    border: 1px solid rgba(196, 181, 253, 0.4);
+    box-shadow: 0 8px 40px rgba(109, 40, 217, 0.4);
+    border: 1px solid rgba(167, 139, 250, 0.2);
 }
 @keyframes gradient-wave {
     0%   { background-position: 0% 50%; }
@@ -59,14 +61,14 @@ body {
     100% { background-position: 0% 50%; }
 }
 .app-header h1 {
-    color: #3b0764 !important;
+    color: #ede9fe !important;
     margin: 0 0 8px;
     font-size: clamp(1.25rem, 2.8vw, 1.9rem);
     font-weight: 700;
     letter-spacing: -0.02em;
 }
 .app-header p {
-    color: #5b21b6 !important;
+    color: #c4b5fd !important;
     margin: 0 0 14px;
     font-size: clamp(0.8rem, 1.3vw, 0.95rem);
     line-height: 1.6;
@@ -77,30 +79,30 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    background: rgba(255, 255, 255, 0.65);
-    color: #6d28d9;
+    background: rgba(255, 255, 255, 0.08);
+    color: #ddd6fe;
     border-radius: 20px;
     padding: clamp(3px, 0.4vw, 5px) clamp(9px, 1.2vw, 14px);
     font-size: clamp(0.66rem, 0.9vw, 0.76rem);
-    border: 1px solid rgba(167, 139, 250, 0.45);
+    border: 1px solid rgba(167, 139, 250, 0.3);
     white-space: nowrap;
     font-weight: 500;
 }
 
 /* ── Step tracker ──────────────────────────────────────────────────────────── */
 .steps-box {
-    background: rgba(255, 255, 255, 0.75);
-    border: 1px solid #e9d5ff;
+    background: rgba(30, 20, 60, 0.7);
+    border: 1px solid #3730a3;
     border-radius: 12px;
     padding: 12px 16px;
-    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.07);
+    box-shadow: 0 2px 12px rgba(109, 40, 217, 0.15);
 }
 .steps-title {
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: #7c3aed;
+    color: #a78bfa;
     margin-bottom: 10px;
 }
 .step-row {
@@ -117,9 +119,9 @@ body {
     flex-shrink: 0;
     transition: background 0.3s;
 }
-.dot-pending { background: #ddd6fe; }
-.dot-active  { background: #a78bfa; animation: pulse-violet 1.4s ease-in-out infinite; }
-.dot-done    { background: #7c3aed; }
+.dot-pending { background: #3730a3; }
+.dot-active  { background: #7c3aed; animation: pulse-violet 1.4s ease-in-out infinite; }
+.dot-done    { background: #a78bfa; }
 @keyframes pulse-violet {
     0%,100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.6); }
     50%     { box-shadow: 0 0 0 7px rgba(167, 139, 250, 0); }
@@ -129,9 +131,9 @@ body {
 .chatbot-wrap {
     border-radius: clamp(10px, 1.2vw, 14px) !important;
     overflow: hidden;
-    box-shadow: 0 4px 24px rgba(139, 92, 246, 0.09) !important;
-    border: 1px solid #e9d5ff !important;
-    background: #fff !important;
+    box-shadow: 0 4px 28px rgba(109, 40, 217, 0.2) !important;
+    border: 1px solid #3730a3 !important;
+    background: #13111f !important;
 }
 .chatbot-wrap > .wrap,
 .chatbot-wrap .bubble-wrap {
@@ -139,8 +141,8 @@ body {
     max-height: min(calc(100vh - 340px), 960px) !important;
 }
 .chatbot-wrap pre, .chatbot-wrap .prose pre {
-    background: #1e1b2e !important;
-    border: 1px solid #4c1d95 !important;
+    background: #080810 !important;
+    border: 1px solid #312e81 !important;
     border-radius: 10px !important;
     padding: clamp(10px, 1.5vw, 18px) clamp(12px, 1.8vw, 20px) !important;
     font-size: clamp(0.74rem, 0.95vw, 0.82rem) !important;
@@ -151,6 +153,7 @@ body {
 .chatbot-wrap code, .chatbot-wrap .prose code {
     font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace !important;
     font-size: clamp(0.74rem, 0.95vw, 0.82rem) !important;
+    color: #c4b5fd !important;
 }
 
 /* ── Footer note ───────────────────────────────────────────────────────────── */
@@ -159,12 +162,12 @@ body {
     color: #7c3aed;
     margin-top: 12px;
     line-height: 1.9;
-    border-top: 1px solid #e9d5ff;
+    border-top: 1px solid #312e81;
     padding-top: 12px;
-    opacity: 0.8;
+    opacity: 0.85;
 }
 
-/* ── Responsive: compact on small screens ──────────────────────────────────── */
+/* ── Responsive ────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
     .gradio-container { padding: 6px 8px !important; }
     .app-header { padding: 14px 16px 12px; }
@@ -392,11 +395,7 @@ EXAMPLE_SCENARIOS = [
     ],
 ]
 
-with gr.Blocks(
-    title="Automation Code Generator",
-    theme=gr.themes.Soft(primary_hue="violet", secondary_hue="pink"),
-    css=CSS,
-) as demo:
+with gr.Blocks(title="Automation Code Generator") as demo:
     agent_history_state = gr.State([])
 
     gr.HTML(HEADER_HTML)
@@ -450,7 +449,6 @@ with gr.Blocks(
     chatbot = gr.Chatbot(
         label="Generated Script & Analysis",
         value=list(WELCOME),
-        type="messages",
         height="60vh",
         elem_classes=["chatbot-wrap"],
     )
@@ -488,4 +486,7 @@ if __name__ == "__main__":
     demo.launch(
         server_name="0.0.0.0",
         server_port=7860,
+        theme=gr.themes.Base(primary_hue="violet", secondary_hue="purple", neutral_hue="slate"),
+        css=CSS,
+        js="() => { document.documentElement.classList.add('dark'); }",
     )

@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
+import base64
 import re
 import subprocess
 import sys
-import tempfile
 import threading
 import time
 
@@ -156,22 +156,6 @@ body {
     color: #c4b5fd !important;
 }
 
-/* ── Download button ───────────────────────────────────────────────────────── */
-#download-btn button {
-    background: linear-gradient(135deg, #5b21b6, #7c3aed) !important;
-    color: #ede9fe !important;
-    border: 1px solid rgba(167, 139, 250, 0.4) !important;
-    box-shadow: 0 2px 12px rgba(109, 40, 217, 0.3) !important;
-    font-weight: 600 !important;
-    font-size: 0.9rem !important;
-    border-radius: 10px !important;
-    margin-top: 8px;
-}
-#download-btn button:hover {
-    background: linear-gradient(135deg, #6d28d9, #8b5cf6) !important;
-    box-shadow: 0 4px 18px rgba(109, 40, 217, 0.5) !important;
-}
-
 /* ── Footer note ───────────────────────────────────────────────────────────── */
 .footer-note {
     font-size: clamp(0.71rem, 0.95vw, 0.79rem);
@@ -316,7 +300,7 @@ def generate(
     if err:
         yield _out(
             chat_history + [{"role": "assistant", "content": f"❌ **Error:** {err}"}],
-            agent_history, True, "Generate Script", "", gr.update(visible=False),
+            agent_history, True, "Generate Script", "", gr.update(value=""),
         )
         return
 
@@ -328,7 +312,7 @@ def generate(
         {"role": "assistant", "content": init_msg},
     ]
     yield _out(chat_history, agent_history, False, "⏳ Generating…",
-               _steps_html([]), gr.update(visible=False))
+               _steps_html([]), gr.update(value=""))
 
     status_log: list[str] = []
     result_holder: list = []
@@ -353,7 +337,7 @@ def generate(
             "content": _progress_msg(frame, status_log),
         }
         yield _out(chat_history, agent_history, False, "⏳ Generating…",
-                   _steps_html(status_log), gr.update(visible=False))
+                   _steps_html(status_log), gr.update(value=""))
         t.join(timeout=1)
 
     if len(result_holder) < 2:
@@ -362,7 +346,7 @@ def generate(
             "content": "❌ **Agent failed.** Check your `OPENAI_API_KEY` and network access.",
         }
         yield _out(chat_history, agent_history, True, "Generate Script",
-                   "", gr.update(visible=False))
+                   "", gr.update(value=""))
         return
 
     elapsed = round(time.time() - start_time)
@@ -375,24 +359,26 @@ def generate(
 
     chat_history[-1] = {"role": "assistant", "content": final_text + footer}
 
-    dl = gr.update(value=None, visible=False)
+    dl = gr.update(value="")
     if code:
-        # Write to a named temp file; delete=False so Gradio can read it after close.
-        # The OS will reclaim it on reboot; HF Spaces containers are ephemeral anyway.
-        tmp = tempfile.NamedTemporaryFile(
-            mode="w", suffix=".py", prefix="test_script_", delete=False,
-            dir=tempfile.gettempdir(),
+        b64 = base64.b64encode(code.encode()).decode()
+        dl = gr.update(
+            value=(
+                f'<a href="data:text/x-python;base64,{b64}" download="test_script.py"'
+                ' style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;'
+                'background:linear-gradient(135deg,#5b21b6,#7c3aed);color:#ede9fe;'
+                'border-radius:10px;text-decoration:none;font-weight:600;font-size:0.9rem;'
+                'border:1px solid rgba(167,139,250,0.4);box-shadow:0 2px 12px rgba(109,40,217,0.3);">'
+                "⬇ Download test_script.py</a>"
+            ),
         )
-        tmp.write(code)
-        tmp.close()
-        dl = gr.update(value=tmp.name, visible=True)
 
     yield _out(chat_history, new_history, True, "✨ Generate Script",
                _steps_html(status_log, done=True), dl)
 
 
 def clear_all():
-    return list(WELCOME), [], "", "", "", gr.update(value=None, visible=False)
+    return list(WELCOME), [], "", "", "", gr.update(value="")
 
 
 # ── UI ─────────────────────────────────────────────────────────────────────────
@@ -471,12 +457,7 @@ with gr.Blocks(title="Automation Code Generator") as demo:
         height=600,
         elem_classes=["chatbot-wrap"],
     )
-    download_btn = gr.DownloadButton(
-        label="⬇ Download test_script.py",
-        visible=False,
-        variant="secondary",
-        elem_id="download-btn",
-    )
+    download_btn = gr.HTML(value="")
 
     # ── Events ───────────────────────────────────────────────────────────────
     gen_outputs = [
@@ -509,5 +490,4 @@ if __name__ == "__main__":
         theme=gr.themes.Base(primary_hue="violet", secondary_hue="purple", neutral_hue="slate"),
         css=CSS,
         js="() => { document.documentElement.classList.add('dark'); }",
-        allowed_paths=[tempfile.gettempdir()],
     )

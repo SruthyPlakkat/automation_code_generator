@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
+import base64
 import re
 import subprocess
 import sys
-import tempfile
 import threading
 import time
 
@@ -359,14 +359,20 @@ def generate(
 
     chat_history[-1] = {"role": "assistant", "content": final_text + footer}
 
-    dl = gr.update(visible=False)
+    dl = gr.update(value="", visible=False)
     if code:
-        tmp = tempfile.NamedTemporaryFile(
-            mode="w", suffix=".py", prefix="test_", delete=False, encoding="utf-8"
+        b64 = base64.b64encode(code.encode()).decode()
+        dl = gr.update(
+            value=(
+                f'<a href="data:text/x-python;base64,{b64}" download="test_script.py"'
+                ' style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;'
+                'background:linear-gradient(135deg,#5b21b6,#7c3aed);color:#ede9fe;'
+                'border-radius:10px;text-decoration:none;font-weight:600;font-size:0.9rem;'
+                'border:1px solid rgba(167,139,250,0.4);box-shadow:0 2px 12px rgba(109,40,217,0.3);">'
+                "⬇ Download test_script.py</a>"
+            ),
+            visible=True,
         )
-        tmp.write(code)
-        tmp.close()
-        dl = gr.update(value=tmp.name, label="⬇ Download test script (.py)", visible=True)
 
     yield _out(chat_history, new_history, True, "✨ Generate Script",
                _steps_html(status_log, done=True), dl)
@@ -452,11 +458,7 @@ with gr.Blocks(title="Automation Code Generator") as demo:
         height=600,
         elem_classes=["chatbot-wrap"],
     )
-    download_btn = gr.File(
-        label="⬇ Download test script (.py)",
-        visible=False,
-        interactive=False,
-    )
+    download_btn = gr.HTML(value="", visible=False)
 
     # ── Events ───────────────────────────────────────────────────────────────
     gen_outputs = [

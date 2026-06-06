@@ -489,4 +489,5 @@ if __name__ == "__main__":
         theme=gr.themes.Base(primary_hue="violet", secondary_hue="purple", neutral_hue="slate"),
         css=CSS,
         js="() => { document.documentElement.classList.add('dark'); }",
+        allowed_paths=[tempfile.gettempdir()],
     )

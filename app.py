@@ -446,6 +446,7 @@ with gr.Blocks(title="Automation Code Generator") as demo:
     chatbot = gr.Chatbot(
         label="Generated Script & Analysis",
         value=list(WELCOME),
+        type="messages",
         height="60vh",
         elem_classes=["chatbot-wrap"],
     )

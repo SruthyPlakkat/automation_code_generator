@@ -1,0 +1,20 @@
+[project]
+name = "automation-code-generator"
+version = "0.1.0"
+description = "AI agent that generates Playwright test scripts from a URL"
+requires-python = ">=3.10"
+dependencies = [
+    "openai>=1.0.0",
+    "playwright>=1.48.0",
+    "gradio>=6.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.scripts]
+start = "app:demo"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-playwright>=0.5.0",
+]

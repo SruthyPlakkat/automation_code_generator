@@ -1,3 +1,15 @@
+---
+title: Automation Code Generator
+emoji: 🤖
+colorFrom: blue
+colorTo: indigo
+sdk: gradio
+sdk_version: 4.44.0
+app_file: app.py
+pinned: false
+license: mit
+---
+
 # Automation Code Generator
 
 An AI agent that accepts a URL and a plain-English test scenario, then automatically:
@@ -49,25 +61,34 @@ No other API keys are needed — Playwright runs locally via headless Chromium.
 
 ## Setup & Run
 
+### With uv (recommended)
+
 ```bash
-# 1. Install dependencies
-pip install -r requirements.txt
+# 1. Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh   # macOS/Linux
+# or: pip install uv
 
-# 2. Install Playwright's Chromium browser (one-time)
-playwright install chromium
+# 2. Sync dependencies (creates .venv automatically)
+uv sync
 
-# 3. Add your Anthropic API key
-echo "ANTHROPIC_API_KEY=sk-ant-..." > .env
+# 3. Install Playwright's Chromium browser (one-time)
+uv run playwright install chromium
 
-# 4. Launch the app
-python app.py
+# 4. Add your Anthropic API key
+cp .env.example .env
+# Edit .env and set ANTHROPIC_API_KEY=sk-ant-...
+
+# 5. Launch the app
+uv run python app.py
 # → Open http://localhost:7860
 ```
 
-Or using `uv`:
+### With pip
 
 ```bash
-uv run python app.py
+pip install -r requirements.txt
+playwright install chromium
+python app.py
 ```
 
 ---
@@ -77,10 +98,12 @@ uv run python app.py
 The agent outputs a `pytest-playwright` script. To run it:
 
 ```bash
+# With uv (dev deps include pytest-playwright)
+uv run pytest test_login.py -v
+
+# Or with pip
 pip install pytest pytest-playwright
 playwright install chromium
-
-# Save the generated script, e.g. test_login.py, then:
 pytest test_login.py -v
 ```
 

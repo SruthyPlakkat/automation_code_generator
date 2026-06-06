@@ -11,6 +11,9 @@ build/
 venv/
 env/
 
+# uv generated cache (lock file should be committed)
+.uv/
+
 # Environment secrets — never commit
 .env
 
